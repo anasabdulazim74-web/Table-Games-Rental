@@ -1,0 +1,75 @@
+@model GameRentalSystem.Models.Game
+
+@{
+    ViewData["Title"] = "Game Details";
+    var average = Model.Reviews.Count == 0 ? 0 : Model.Reviews.Average(r => r.Rating);
+}
+
+<h2>@Model.Name</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <img class="img-fluid rounded" src="@(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "https://via.placeholder.com/500x300?text=Board+Game" : Model.ImageUrl)" alt="@Model.Name" />
+    </div>
+    <div class="col-md-8">
+        <p><strong>Genre:</strong> @Model.Genre</p>
+        <p><strong>Players:</strong> @Model.NumberOfPlayers</p>
+        <p><strong>Play Time:</strong> @Model.PlayTime min</p>
+        <p><strong>Average Rating:</strong> @average.ToString("0.0") / 5</p>
+        <p>@Model.Description</p>
+
+        @if (Context.Session.GetInt32("UserId") != null)
+        {
+            <form asp-controller="Games" asp-action="RentGame" method="post">
+                <input type="hidden" name="gameId" value="@Model.Id" />
+                <button type="submit" class="btn btn-success">Rent This Game</button>
+            </form>
+        }
+        else
+        {
+            <p><a asp-controller="Users" asp-action="Login">Login</a> to rent this game.</p>
+        }
+    </div>
+</div>
+
+<hr />
+<h4>Reviews</h4>
+
+@if (Context.Session.GetInt32("UserId") != null)
+{
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-warning">@TempData["Message"]</div>
+    }
+
+    <div class="mb-4">
+        <h5>Leave a Review</h5>
+        <form asp-controller="Reviews" asp-action="Create" method="post">
+            <input type="hidden" name="gameId" value="@Model.Id" />
+            <div class="mb-2">
+                <label>Rating (1-5)</label>
+                <input type="number" name="rating" class="form-control" min="1" max="5" required style="width: 100px;" />
+            </div>
+            <div class="mb-2">
+                <label>Comment</label>
+                <textarea name="comment" class="form-control" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+}
+
+@if (Model.Reviews.Count == 0)
+{
+    <p>No reviews yet.</p>
+}
+else
+{
+    @foreach (var review in Model.Reviews.OrderByDescending(r => r.Id))
+    {
+        <div class="border p-2 mb-2 rounded">
+            <strong>@(review.User?.FullName ?? "User")</strong> - Rating: @review.Rating / 5
+            <p class="mb-0">@review.Comment</p>
+        </div>
+    }
+}

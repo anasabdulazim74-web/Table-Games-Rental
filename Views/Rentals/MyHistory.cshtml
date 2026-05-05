@@ -1,0 +1,55 @@
+@model IEnumerable<GameRentalSystem.Models.Rental>
+
+@{
+    ViewData["Title"] = "My Rentals";
+}
+
+<h2>My Rental History</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+
+@if (!Model.Any())
+{
+    <p>You have no rentals yet. Browse <a asp-controller="Games" asp-action="Index">games</a> and rent one.</p>
+}
+else
+{
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Game</th>
+            <th>Rent Date</th>
+            <th>Return Date</th>
+            <th>Rating</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rental in Model)
+        {
+            <tr>
+                <td>@rental.Game?.Name</td>
+                <td>@rental.RentDate.ToString("yyyy-MM-dd")</td>
+                <td>@(rental.ReturnDate?.ToString("yyyy-MM-dd") ?? "Not returned")</td>
+                <td>@(rental.Review?.Rating.ToString() ?? "-")</td>
+                <td>
+                    @if (rental.ReturnDate == null)
+                    {
+                        <form asp-action="ReturnGame" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@rental.Id" />
+                            <button class="btn btn-sm btn-outline-secondary" type="submit">Return</button>
+                        </form>
+                    }
+                    @if (rental.Review == null && rental.ReturnDate != null)
+                    {
+                        <a class="btn btn-sm btn-outline-primary" asp-controller="Reviews" asp-action="Create" asp-route-rentalId="@rental.Id">Add Review</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}

@@ -1,0 +1,46 @@
+@model GameRentalSystem.Models.Game
+
+@{
+    ViewData["Title"] = "Edit Game";
+}
+
+<h2>Edit Game</h2>
+
+<form asp-action="Edit" method="post">
+    <input asp-for="Id" type="hidden" />
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Genre" class="form-label"></label>
+        <input asp-for="Genre" class="form-control" />
+        <span asp-validation-for="Genre" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="NumberOfPlayers" class="form-label"></label>
+        <input asp-for="NumberOfPlayers" class="form-control" />
+        <span asp-validation-for="NumberOfPlayers" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="PlayTime" class="form-label"></label>
+        <input asp-for="PlayTime" class="form-control" />
+        <span asp-validation-for="PlayTime" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ImageUrl" class="form-label"></label>
+        <input asp-for="ImageUrl" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

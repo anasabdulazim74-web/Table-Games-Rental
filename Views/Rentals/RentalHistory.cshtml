@@ -1,0 +1,31 @@
+@model IEnumerable<GameRentalSystem.Models.Rental>
+
+@{
+    ViewData["Title"] = "Rental History";
+}
+
+<h2>Rental History (Admin)</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Game</th>
+            <th>Rent Date</th>
+            <th>Return Date</th>
+            <th>Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rental in Model)
+        {
+            <tr>
+                <td>@rental.User?.FullName</td>
+                <td>@rental.Game?.Name</td>
+                <td>@rental.RentDate.ToString("yyyy-MM-dd")</td>
+                <td>@(rental.ReturnDate?.ToString("yyyy-MM-dd") ?? "Not returned")</td>
+                <td>@(rental.Review?.Rating.ToString() ?? "-")</td>
+            </tr>
+        }
+    </tbody>
+</table>

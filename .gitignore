@@ -1,0 +1,14 @@
+## .NET / ASP.NET Core
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.log
+
+## Secrets & local config
+appsettings.Development.json
+
+## OS
+.DS_Store
+Thumbs.db
